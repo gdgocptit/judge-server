@@ -1,0 +1,7 @@
+# Preserved runtime image on this VPS; see README.md.
+FROM dmoj/judge-tier2:runtime-base
+USER root
+RUN rm -rf /judge
+COPY . /judge
+WORKDIR /judge
+RUN DMOJ_PARALLEL=2 /env/bin/pip install --no-cache-dir --no-build-isolation -e .
