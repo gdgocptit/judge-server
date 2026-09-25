@@ -1,0 +1,17 @@
+name: dmoj-beam-local
+services:
+  judge:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.beam
+    image: gdgocptit/judge-beam:local
+    cap_add: [SYS_PTRACE]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 1g
+    memswap_limit: 1g
+    pids_limit: 128
+    cpus: 2
+    volumes:
+      - ${DMOJ_PROBLEM_ROOT:-../../problems}:/problems:ro
+      - ${DMOJ_BEAM_CONFIG:-../../.local/beam-judge.yml}:/judge.yml:ro
+    command: [-c, /judge.yml, -e, "ELIXIR,ERLANG", host.docker.internal]
