@@ -9,8 +9,10 @@ FROM dmoj/judge-tier2:runtime-base
 USER root
 COPY --from=beam /usr/local/lib/erlang /usr/local/lib/erlang
 COPY --from=beam /opt/elixir /opt/elixir
+COPY --from=beam /usr/lib/x86_64-linux-gnu/libsctp.so.1* /usr/local/lib/
 RUN ln -s /usr/local/lib/erlang/bin/erl /usr/local/bin/erl \
     && ln -s /usr/local/lib/erlang/bin/escript /usr/local/bin/escript \
+    && ldconfig \
     && /env/bin/python -c "import yaml; p='/judge-runtime-paths.yml'; c=yaml.safe_load(open(p)); c['runtime'].update(erl='/usr/local/bin/erl', escript='/usr/local/bin/escript', elixir='/opt/elixir/bin/elixir'); open(p,'w').write(yaml.safe_dump(c))"
 ENV PATH="/opt/elixir/bin:/usr/local/bin:${PATH}"
 RUN rm -rf /judge
